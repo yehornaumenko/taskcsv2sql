@@ -148,5 +148,4 @@ func makePostgresTable(vehicles []Vehicle) {
 	if tx.Error != nil {
 		log.Fatalln(tx.Error)
 	}
-
 }
