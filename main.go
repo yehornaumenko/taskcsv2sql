@@ -125,7 +125,8 @@ func makeSQLiteTable(vehicles []Vehicle) {
 		log.Fatalln(err)
 	}
 
-	tx := db.Create(&vehicles)
+	cre := vehicles[:5]
+	tx := db.Create(&cre)
 	if tx.Error != nil {
 		log.Fatalln(tx.Error)
 	}
@@ -159,5 +160,4 @@ func makePostgresTable(vehicles []Vehicle, number uint64) {
 			log.Fatalln(tx.Error)
 		}
 	}
-
 }
