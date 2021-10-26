@@ -1,4 +1,4 @@
-postgresDSN: "host=localhost user=json password=json dbname=json port=5432 sslmode=disable TimeZone=Asia/Shanghai"
+postgresDSN: "host=db user=postgres password=postgres dbname=postgres port=5432 sslmode=disable TimeZone=Asia/Shanghai"
 sqliteFileName: vehicles.db
 csvFileName: vehicles.csv
 vehicleNumberToConvert: 5
