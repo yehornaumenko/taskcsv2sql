@@ -1,4 +1,4 @@
 postgresDSN: "host=db user=postgres password=postgres dbname=postgres port=5432 sslmode=disable TimeZone=Asia/Shanghai"
 sqliteFileName: vehicles.db
 csvFileName: vehicles.csv
-vehicleNumberToConvert: 5
+vehicleNumberToConvert: 0

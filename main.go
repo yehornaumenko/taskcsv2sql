@@ -8,6 +8,7 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"io/ioutil"
 	"log"
 	"os"
@@ -37,14 +38,14 @@ type Vehicle struct {
 	URL          string   `csv:"url"`
 	Region       string   `csv:"region"`
 	RegionURL    string   `csv:"region_url"`
-	Price        *uint     `csv:"price"`
-	Year         *uint16   `csv:"year"`
+	Price        *uint    `csv:"price"`
+	Year         *uint16  `csv:"year"`
 	Manufacturer string   `csv:"manufacturer"`
 	Model        string   `csv:"model"`
 	Condition    string   `csv:"model"`
 	Cylinders    string   `csv:"cylinders"`
 	Fuel         string   `csv:"fuel"`
-	Odometer     *uint32   `csv:"odometer"`
+	Odometer     *uint32  `csv:"odometer"`
 	TitleStatus  string   `csv:"title_status"`
 	Transmission string   `csv:"transmission"`
 	VIN          string   `csv:"vin"`
@@ -139,7 +140,9 @@ func makePostgresTable(vehicles []Vehicle, number uint64) {
 		log.Fatalln(err)
 	}
 
-	err = db.Table(vehiclesTableName).AutoMigrate(&Vehicle{})
+	dbVehiclesTable := db.Table(vehiclesTableName)
+
+	err = dbVehiclesTable.AutoMigrate(&Vehicle{})
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -151,12 +154,13 @@ func makePostgresTable(vehicles []Vehicle, number uint64) {
 		cre = vehicles[:number]
 	}
 
-	for i, vehicle := range cre {
-		if i % 500 == 0 {
-			log.Printf("Adding vehicle, %+v\n", vehicle)
-		}
-		tx := db.Create(&vehicle)
+	for _, vehicle := range cre {
+		tx := dbVehiclesTable.Clauses(clause.OnConflict{
+			Columns:   []clause.Column{{Name: "id"}},
+			DoNothing: true,
+		}).Create(&vehicle)
 		if tx.Error != nil {
+			log.Printf("%+v\n", vehicle)
 			log.Fatalln(tx.Error)
 		}
 	}
